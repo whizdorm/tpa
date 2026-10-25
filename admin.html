@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What exactly are you looking for?</title>
+<style>
+  :root{
+    --ink:#e9edff;
+    --accent:#ffd166;
+    --shoe:#141a2c;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(4px, 2vh, 20px);
+    padding:24px 16px;
+    overflow:hidden;
+    background:radial-gradient(120% 85% at 50% 0%, #1e2750 0%, #10152e 48%, #070a16 100%);
+    color:var(--ink);
+    font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------------- title ---------------- */
+  .title{
+    margin:0;
+    text-align:center;
+    font-weight:800;
+    font-size:clamp(20px, 5.2vw, 42px);
+    line-height:1.15;
+    letter-spacing:-.02em;
+    animation:rise .85s cubic-bezier(.2,.8,.25,1) both;
+  }
+
+  .title .line2{
+    display:block;
+    background:linear-gradient(90deg,#ffd166,#ff9f6e,#ffd166);
+    background-size:200% 100%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    animation:rise .85s .1s cubic-bezier(.2,.8,.25,1) both,
+              shimmer 5s linear infinite;
+  }
+
+  @keyframes rise{
+    from{opacity:0; transform:translateY(16px)}
+    to  {opacity:1; transform:translateY(0)}
+  }
+
+  @keyframes shimmer{
+    to{background-position:200% 0}
+  }
+
+  /* ---------------- stage ---------------- */
+  .stage{
+    display:block;
+    height:min(56vh, 380px);
+    width:auto;
+    filter:drop-shadow(0 18px 26px rgba(0,0,0,.45));
+  }
+
+  .anchor{fill:none}
+
+  /* ---------------- walk cycle ---------------- */
+  .walker{
+    animation:bodyBob .9s ease-in-out infinite;
+  }
+
+  @keyframes bodyBob{
+    0%   {transform:translate(0, 7px)}
+    25%  {transform:translate(1.5px, 0)}
+    50%  {transform:translate(0, 7px)}
+    75%  {transform:translate(-1.5px, 0)}
+    100% {transform:translate(0, 7px)}
+  }
+
+  /* every rotating part carries an invisible "anchor" rect centred on its
+     joint, so 50%/50% of its bounding box is always exactly the pivot. */
+  .leg, .shin, .arm, .head{
+    transform-box:fill-box;
+    transform-origin:50% 50%;
+  }
+
+  .leg {animation:thighSwing .9s ease-in-out infinite}
+  .shin{animation:shinSwing  .9s ease-in-out infinite}
+  .arm {animation:armSwing   .9s ease-in-out infinite}
+  .head{animation:headTilt   4s  ease-in-out infinite}
+
+  .leg.phase2, .shin.phase2, .arm.phase2{animation-delay:-.45s}
+
+  @keyframes thighSwing{
+    0%,100%{transform:rotate(-24deg)}
+    50%    {transform:rotate(24deg)}
+  }
+
+  @keyframes shinSwing{
+    0%  {transform:rotate(5deg)}
+    35% {transform:rotate(7deg)}
+    52% {transform:rotate(22deg)}
+    70% {transform:rotate(58deg)}
+    90% {transform:rotate(12deg)}
+    100%{transform:rotate(5deg)}
+  }
+
+  @keyframes armSwing{
+    0%,100%{transform:rotate(28deg)}
+    50%    {transform:rotate(-28deg)}
+  }
+
+  @keyframes headTilt{
+    0%  {transform:rotate(-7deg)}
+    28% {transform:rotate(6deg)}
+    55% {transform:rotate(-3deg)}
+    78% {transform:rotate(9deg)}
+    100%{transform:rotate(-7deg)}
+  }
+
+  /* ---------------- ground & shadow ---------------- */
+  .ground{animation:scrollGround .9s linear infinite}
+  @keyframes scrollGround{
+    to{stroke-dashoffset:-36}
+  }
+
+  .shadow{
+    transform-box:fill-box;
+    transform-origin:50% 50%;
+    animation:shadowPulse .9s ease-in-out infinite;
+  }
+  @keyframes shadowPulse{
+    0%,50%,100%{transform:scaleX(1);    opacity:.6}
+    25%,75%    {transform:scaleX(.86);  opacity:.42}
+  }
+
+  /* ---------------- question marks ---------------- */
+  .q{
+    transform-box:fill-box;
+    transform-origin:50% 50%;
+    opacity:0;
+    animation:floatQ 3.6s ease-in-out infinite;
+  }
+  .q:nth-child(1){animation-delay:.2s}
+  .q:nth-child(2){animation-delay:1.4s}
+  .q:nth-child(3){animation-delay:2.6s}
+
+  @keyframes floatQ{
+    0%  {opacity:0; transform:translate(0, 8px)  scale(.5)  rotate(-12deg)}
+    20% {opacity:1; transform:translate(0,-2px)  scale(1)   rotate(0deg)}
+    70% {opacity:1; transform:translate(2px,-16px) scale(1) rotate(8deg)}
+    100%{opacity:0; transform:translate(4px,-26px) scale(.85) rotate(14deg)}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .walker, .leg, .shin, .arm, .head, .ground, .shadow, .q, .title, .title .line2{
+      animation-duration:6s;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <h1 class="title">
+    What exactly
+    <span class="line2">are you looking for?</span>
+  </h1>
+
+  <svg class="stage" viewBox="0 0 240 360" role="img"
+       aria-label="A confused man pacing in place, looking around">
+    <defs>
+      <linearGradient id="shirtGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#7aa8ff"/>
+        <stop offset="1" stop-color="#3f6bd0"/>
+      </linearGradient>
+      <linearGradient id="pantsGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3b4878"/>
+        <stop offset="1" stop-color="#232a44"/>
+      </linearGradient>
+      <radialGradient id="haloGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#5b8def" stop-opacity=".30"/>
+        <stop offset="1" stop-color="#5b8def" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <!-- soft halo -->
+    <ellipse cx="120" cy="170" rx="150" ry="150" fill="url(#haloGrad)"/>
+
+    <!-- scrolling ground -->
+    <line class="ground" x1="-20" y1="322" x2="260" y2="322"
+          stroke="#28325a" stroke-width="3" stroke-linecap="round"
+          stroke-dasharray="20 16"/>
+
+    <!-- shadow -->
+    <ellipse class="shadow" cx="120" cy="325" rx="50" ry="8"
+             fill="#03050c" opacity=".6"/>
+
+    <g class="walker">
+
+      <!-- ============ BACK ARM ============ -->
+      <g transform="translate(101,151)">
+        <g class="arm phase2">
+          <rect class="anchor" x="-200" y="-200" width="400" height="400"/>
+          <rect x="-8" y="-8" width="16" height="66" rx="8" fill="#33579f"/>
+          <circle cx="0" cy="62" r="9.5" fill="#eec49b"/>
+        </g>
+      </g>
+
+      <!-- ============ BACK LEG ============ -->
+      <g transform="translate(109,212)">
+        <g class="leg">
+          <rect class="anchor" x="-200" y="-200" width="400" height="400"/>
+          <rect x="-11" y="-10" width="22" height="62" rx="11" fill="url(#pantsGrad)"/>
+          <g transform="translate(0,50)">
+            <g class="shin">
+              <rect class="anchor" x="-200" y="-200" width="400" height="400"/>
+              <rect x="-10" y="-8" width="20" height="56" rx="10" fill="url(#pantsGrad)"/>
+              <rect x="-12" y="36" width="32" height="16" rx="8" fill="var(--shoe)"/>
+            </g>
+          </g>
+        </g>
+      </g>
+
+      <!-- ============ FRONT LEG ============ -->
+      <g transform="translate(131,212)">
+        <g class="leg phase2">
+          <rect class="anchor" x="-200" y="-200" width="400" height="400"/>
+          <rect x="-11" y="-10" width="22" height="62" rx="11" fill="url(#pantsGrad)"/>
+          <g transform="translate(0,50)">
+            <g class="shin phase2">
+              <rect class="anchor" x="-200" y="-200" width="400" height="400"/>
+              <rect x="-10" y="-8" width="20" height="56" rx="10" fill="url(#pantsGrad)"/>
+              <rect x="-12" y="36" width="32" height="16" rx="8" fill="var(--shoe)"/>
+            </g>
+          </g>
+        </g>
+      </g>
+
+      <!-- ============ TORSO ============ -->
+      <rect x="92" y="126" width="56" height="98" rx="28" fill="url(#shirtGrad)"/>
+      <path d="M107 129 Q120 143 133 129" fill="none" stroke="#2f549e"
+            stroke-width="3" stroke-linecap="round"/>
+
+      <!-- ============ HEAD ============ -->
+      <g transform="translate(120,118)">
+        <g class="head">
+          <rect class="anchor" x="-200" y="-200" width="400" height="400"/>
+
+          <!-- neck -->
+          <rect x="-9" y="-12" width="18" height="34" rx="9" fill="#e6b78c"/>
+
+          <!-- face -->
+          <circle cx="0" cy="-34" r="32" fill="#ffd9b3"/>
+
+          <!-- ears -->
+          <circle cx="-31" cy="-32" r="5.5" fill="#f0c39a"/>
+          <circle cx="31"  cy="-32" r="5.5" fill="#f0c39a"/>
+
+          <!-- hair -->
+          <path d="M-32,-34 A32,32 0 0 1 32,-34
+                   Q22,-28 14,-35 Q6,-27 -2,-35
+                   Q-10,-27 -18,-34 Q-26,-29 -32,-34 Z"
+                fill="#241d33"/>
+
+          <!-- eyes -->
+          <circle cx="-11" cy="-38" r="6.2" fill="#ffffff"/>
+          <circle cx="11"  cy="-38" r="6.2" fill="#ffffff"/>
+          <circle class="pupil" cx="-11" cy="-38" r="2.9" fill="#1b1b30"/>
+          <circle class="pupil" cx="11"  cy="-38" r="2.9" fill="#1b1b30"/>
+
+          <!-- confused eyebrows (asymmetric on purpose) -->
+          <path d="M-19,-49 Q-12,-53 -4,-48" fill="none" stroke="#241d33"
+                stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M4,-54 Q12,-50 19,-45" fill="none" stroke="#241d33"
+                stroke-width="2.6" stroke-linecap="round"/>
+
+          <!-- squiggly mouth -->
+          <path d="M-7,-19 Q-3.5,-14 0,-19 Q3.5,-24 7,-19" fill="none"
+                stroke="#c98a56" stroke-width="2.4" stroke-linecap="round"/>
+        </g>
+      </g>
+
+      <!-- ============ FRONT ARM ============ -->
+      <g transform="translate(139,151)">
+        <g class="arm">
+          <rect class="anchor" x="-200" y="-200" width="400" height="400"/>
+          <rect x="-8" y="-8" width="16" height="66" rx="8" fill="#5b8def"/>
+          <circle cx="0" cy="62" r="9.5" fill="#ffd9b3"/>
+        </g>
+      </g>
+
+    </g>
+
+    <!-- ============ QUESTION MARKS ============ -->
+    <g font-family="ui-sans-serif, system-ui, sans-serif" font-weight="800" fill="#ffd166">
+      <text class="q" x="150" y="70"  font-size="30">?</text>
+      <text class="q" x="66"  y="52"  font-size="21">?</text>
+      <text class="q" x="178" y="116" font-size="17">?</text>
+    </g>
+  </svg>
+
+<script>
+  /* ------------------------------------------------------------------
+     Make the pupils follow the pointer around — extra confusion.
+  ------------------------------------------------------------------ */
+  (function () {
+    const svg    = document.querySelector('.stage');
+    const pupils = Array.from(document.querySelectorAll('.pupil'));
+    if (!svg || !pupils.length) return;
+
+    const HEAD_X = 120;      // head centre in viewBox units
+    const HEAD_Y = 84;
+    const MAX    = 2.6;      // max pupil travel in viewBox units
+
+    let targetX = 0, targetY = 0;
+    let curX = 0, curY = 0;
+    let raf = null;
+
+    function loop() {
+      curX += (targetX - curX) * 0.18;
+      curY += (targetY - curY) * 0.18;
+
+      const t = 'translate(' + curX.toFixed(2) + ',' + curY.toFixed(2) + ')';
+      for (const p of pupils) p.setAttribute('transform', t);
+
+      if (Math.abs(targetX - curX) > 0.04 || Math.abs(targetY - curY) > 0.04) {
+        raf = requestAnimationFrame(loop);
+      } else {
+        raf = null;
+      }
+    }
+
+    function onMove(e) {
+      const r = svg.getBoundingClientRect();
+      const s = r.width / 240;                       // px per viewBox unit
+
+      const dx = e.clientX - (r.left + HEAD_X * s);
+      const dy = e.clientY - (r.top  + HEAD_Y * s);
+      const d  = Math.hypot(dx, dy) || 1;
+
+      targetX = (dx / d) * MAX;
+      targetY = (dy / d) * MAX;
+
+      if (!raf) raf = requestAnimationFrame(loop);
+    }
+
+    window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('pointerdown', onMove, { passive: true });
+  })();
+</script>
+</body>
+</html>
